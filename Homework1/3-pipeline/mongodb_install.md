@@ -1,4 +1,4 @@
-# Инсталација и работа со MongoDB
+# Инсталација на MongoDB
  Брза инсталација на MongoDB.
 
 #### <b><code>Чекор 1:</code></b> Инсталација на MongoDB МSI Installer Package <br>
