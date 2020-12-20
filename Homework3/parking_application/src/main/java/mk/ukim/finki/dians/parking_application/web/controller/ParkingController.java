@@ -2,13 +2,17 @@ package mk.ukim.finki.dians.parking_application.web.controller;
 
 import mk.ukim.finki.dians.parking_application.model.Parking;
 import mk.ukim.finki.dians.parking_application.service.ParkingService;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Controller
+@RequestMapping("/parking")
 public class ParkingController {
     private final ParkingService parkingService;
 
