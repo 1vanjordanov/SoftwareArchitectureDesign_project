@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/assets/index.css" media="screen"/>
+
+    <!--    for single html viewing (non running application)-->
+    <link rel="stylesheet" type="text/css" href="../static/assets/index.css" media="screen"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var x = document.getElementById("latlong");
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.hidden = false;
+            x.innerText = "Geolocation is not supported by this browser.";
+        }
+
+        function showPosition(position) {
+            var x = document.getElementById("latlong");
+            x.value = position.coords.latitude + " " + position.coords.longitude;
+        }
+    </script>
+
+</head>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-teal px-5">
+
+        <a class="navbar-brand" href="#">
+            <img src="/images/logo.png" width="40" height="40">
+            Your Parking Compass
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navBarSupportedContent"
+                aria-controls="navBarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse pl-5" id="navBarSupportedContent">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/parking/locate">Locate</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" href="/login">Log in</a>
+                </li>
+                <li sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" href="/register">Register</a>
+                </li>
+                <a class="nav-link" href="#">
+                    <th:block th:if="${#request.getRemoteUser()!=null}"
+                              th:text="${#request.getRemoteUser()}"/>
+                </a>
+                <li sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/logout">Log out</a>
+                </li>
+            </ul>
+        </div>
+
+    </nav>
+</header>
+<body>
+<div class="container mt-5 ">
+    <div class="row justify-content-center">
+        <div class="col-5">
+            <form action="/parking/result" method="POST" class="form login">
+
+                <div class="row">
+                    <div class="form-floating col-xs-6 text-left text-light">Search by City <br></div>
+                </div>
+                <div class="row">
+                    <div class="form-floating col-xs-6 text-left">
+                        <input type="text" class="form-control text-dark" id="cityName" name="city" placeholder="Enter city name">
+                        <label for="cityName">Enter city name</label>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="form-floating col-xs-6 text-left text-light">Search by address <br></div>
+                </div>
+                <div class="row">
+                    <div class="form-floating col-xs-6 text-left">
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
+                        <label for="address">Enter address</label>
+                    </div>
+                </div>
+                <br>
+                <div class="row justify-content-around">
+                    <div class="col-5">
+                        <div>
+                            <input type="radio" class="btn-check" name="sort" id="name" autocomplete="off"
+                                   value="name" checked>
+                            <label class="btn bg-teal" for="name">Sort by Name</label>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div>
+                            <input type="radio" class="btn-check" name="sort" id="rating" autocomplete="off"
+                                   value="rating">
+                            <label class="btn bg-teal" for="rating">Sort By Rating</label>
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+                <div class=" row col-xs-6">
+                    <div th:if="${hasError}" class="border border-danger text-center m-2">
+                        <h4 class="text-danger" th:text="${error}"></h4>
+                    </div>
+                    <br>
+                    <div class="form-floating d-grid col-6 mx-auto">
+                        <button class="btn bg-teal">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-5 ">
+            <div class="row justify-content-center mt-5">
+
+                <a class="btn bg-teal w-75 "
+                   href="https://l.facebook.com/l.php?u=https%3A%2F%2Fwww.google.com%2Fmaps%2Fd%2Fu%2F0%2Fedit%3Fmid%3D1dkMVtJGUUDw-bZYRQyqm-4OP6SCaiAfr%26usp%3Dsharing%26fbclid%3DIwAR0sRLEgb5fQ_TR2aUG_iAJGYfzfAceZnttrl-aF1CCS04LdOBdb-LV-cB8&h=AT1kzACFTfTI_V3Fd12jbu-irwmyHIorKW4XKVhSGzVdfa_i3LzcZ0b8itC0G-H4_Lf_AQMI_9a-huGCO2x21BDgKPKi6NTBKiN4obQA_ucYRbp7WtQEhnd48rHnJ0T0RjYWSRahdW49mTw">
+                    View all parking lots
+                </a>
+            </div>
+            <div class="row mt-5">
+                <form action="/parking/currentlocation" class="form login" method="GET">
+                    <div class="row justify-content-center w-50 mx-auto">
+                        <button class="btn btn-lg bg-teal border border-white" type="submit">Search by current
+                            location
+                        </button>
+                        <input type="text"
+                               class="form-control"
+                               id="latlong"
+                               name="latlong"
+                               hidden="true">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
