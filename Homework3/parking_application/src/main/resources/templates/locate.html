@@ -116,9 +116,9 @@
                 </div>
                 <br>
                 <div class=" row col-xs-6">
-<!--                    <div class="row text-light">-->
-<!--                        <h4 th:if="${isEmpty}" th:text="${Emptyerror}"></h4>-->
-<!--                    </div>-->
+                    <div th:if="${hasError}" class="border border-danger text-center m-2">
+                        <h4 class="text-danger" th:text="${error}"></h4>
+                    </div>
                     <br>
                     <div class="form-floating d-grid col-6 mx-auto">
                         <button class="btn bg-teal">Search</button>

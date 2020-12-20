@@ -32,9 +32,9 @@ public class ParkingController {
                                 @RequestParam(required = false) String sort,
                                 Model model) {
 
-        if (city.isEmpty() && address.isEmpty()) {
-//            model.addAttribute("isEmpty", true);
-//            model.addAttribute("Emptyerror", "You must fill at least one field in order to search by city/address");
+        if  (city=="" && address==""){
+            model.addAttribute("isEmpty", true);
+            model.addAttribute("Emptyerror", "You must fill at least one field in order to search by city/address");
             model.addAttribute("currentLocation", "");
             return "/locate";
         }
