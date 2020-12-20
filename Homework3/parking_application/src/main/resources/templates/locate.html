@@ -116,8 +116,8 @@
                 </div>
                 <br>
                 <div class=" row col-xs-6">
-                    <div th:if="${hasError}" class="border border-danger text-center m-2">
-                        <h4 class="text-danger" th:text="${error}"></h4>
+                    <div class="row text-light">
+                        <h4 th:if="${isEmpty}" th:text="${Emptyerror}"></h4>
                     </div>
                     <br>
                     <div class="form-floating d-grid col-6 mx-auto">
@@ -131,7 +131,7 @@
             <div class="row justify-content-center mt-5">
 
                 <a class="btn bg-teal w-75 "
-                   href="https://l.facebook.com/l.php?u=https%3A%2F%2Fwww.google.com%2Fmaps%2Fd%2Fu%2F0%2Fedit%3Fmid%3D1dkMVtJGUUDw-bZYRQyqm-4OP6SCaiAfr%26usp%3Dsharing%26fbclid%3DIwAR0sRLEgb5fQ_TR2aUG_iAJGYfzfAceZnttrl-aF1CCS04LdOBdb-LV-cB8&h=AT1kzACFTfTI_V3Fd12jbu-irwmyHIorKW4XKVhSGzVdfa_i3LzcZ0b8itC0G-H4_Lf_AQMI_9a-huGCO2x21BDgKPKi6NTBKiN4obQA_ucYRbp7WtQEhnd48rHnJ0T0RjYWSRahdW49mTw">
+                   href="https://www.google.com/maps/d/u/0/edit?mid=1dkMVtJGUUDw-bZYRQyqm-4OP6SCaiAfr&usp=sharing">
                     View all parking lots
                 </a>
             </div>
