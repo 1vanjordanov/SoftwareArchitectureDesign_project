@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         if (this.userRepository.findByUsername(username).isPresent())
             throw new UsernameExistsException(username);
 
-        User user = new User(username, password, name, surname);
+        User user = new User(username, passwordEncoder.encode(password), name, surname);
         return userRepository.save(user);
     }
 
