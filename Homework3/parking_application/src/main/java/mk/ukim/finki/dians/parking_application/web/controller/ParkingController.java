@@ -2,14 +2,13 @@ package mk.ukim.finki.dians.parking_application.web.controller;
 
 import mk.ukim.finki.dians.parking_application.model.Parking;
 import mk.ukim.finki.dians.parking_application.service.ParkingService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/parking")
@@ -22,8 +21,9 @@ public class ParkingController {
     }
 
     @GetMapping("/locate")
-    public String getLocatePage() {
-        return "locate";
+    public String getLocatePage(Model model) {
+        model.addAttribute("bodyContent", "locate");
+        return "master-template";
     }
 
     @PostMapping("/result")
@@ -32,11 +32,12 @@ public class ParkingController {
                                 @RequestParam(required = false) String sort,
                                 Model model) {
 
-        if  (city=="" && address==""){
-            model.addAttribute("isEmpty", true);
-            model.addAttribute("Emptyerror", "You must fill at least one field in order to search by city/address");
+        if  (city=="" && address==""){ // stavi go ova ->if (city.isEmpty() && address.isEmpty())
+            model.addAttribute("hasError", true);
+            model.addAttribute("error", "You must fill at least one field in order to search by city/address");
             model.addAttribute("currentLocation", "");
-            return "/locate";
+            model.addAttribute("bodyContent", "locate");
+            return "master-template";
         }
         List<Parking> result_parking = null;
 
@@ -64,25 +65,86 @@ public class ParkingController {
         }
         model.addAttribute("parking", result_parking);
         model.addAttribute("currentLocation", "");
-        return "results";
+
+        model.addAttribute("bodyContent", "results");
+        return "master-template";
     }
 
     @GetMapping("/currentlocation")
     public String getCurrentLocation(@RequestParam String latlong, Model model) {
         if (latlong.equals("")) { //ne ja zemalo lokacijata
-            return "locate"; //javascript ke vrati Geolocation is not supported by this browser
+            model.addAttribute("bodyContent", "locate");
+            return "master-template"; //javascript ke vrati Geolocation is not supported by this browser
         }
         String[] coords = latlong.split(" ");
         double latitude = Double.parseDouble(coords[0]);
         double longitude = Double.parseDouble(coords[1]);
-        List<Parking> result_parking = null;
-        result_parking = parkingService.findByCurrentAddress(latitude, longitude);
-        if (result_parking.isEmpty()) {
+        List<Parking> resultParking = null;
+        resultParking = parkingService.findByCurrentAddress(latitude, longitude);
+        if (resultParking.isEmpty()) {
             return "notfoundparking";
         }
-        model.addAttribute("parking", result_parking);
+        model.addAttribute("parking", resultParking);
         model.addAttribute("currentLocation", "Sorted by shortest distance");
-        return "results";
+        model.addAttribute("bodyContent", "results");
+        return "master-template";
+    }
+
+    @GetMapping("/allparkings")
+    public String getParkingPage(Model model) {
+        List<Parking> allParkings = parkingService.findAll();
+        model.addAttribute("parking", allParkings);
+        model.addAttribute("bodyContent", "allparkings");
+        return "master-template";
+    }
+
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String deleteParking(@PathVariable Long id) {
+        this.parkingService.deleteById(id);
+        return "redirect:/parking/allparkings";
+    }
+
+    @GetMapping("/edit-form/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String editParkingPage(@PathVariable Long id, Model model) {
+
+        Optional<Parking> parkingOpt = this.parkingService.findById(id);
+
+        if (parkingOpt.isPresent()) {
+
+            Parking parking = parkingOpt.get();
+            model.addAttribute("parking", parking);
+            model.addAttribute("bodyContent", "add-parking");
+            return "master-template";
+        }
+
+        return "notfoundparking";
+    }
+
+    @GetMapping("/add-form")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String addParkingPage(Model model) {
+        model.addAttribute("bodyContent", "add-parking");
+        return "master-template";
+    }
+
+    @PostMapping("/add")
+    public String saveParking(
+            @RequestParam(required = false) Long id,
+            @RequestParam String name,
+            @RequestParam String city,
+            @RequestParam String address,
+            @RequestParam Double latitude,
+            @RequestParam Double longitude,
+            @RequestParam String rating) {
+
+        if (id != null) {
+            this.parkingService.edit(id, name, city, address, latitude, longitude, rating);
+        } else {
+            this.parkingService.save(name, city, address, latitude, longitude, rating);
+        }
+        return "redirect:/parking/allparkings";
     }
 
 }
