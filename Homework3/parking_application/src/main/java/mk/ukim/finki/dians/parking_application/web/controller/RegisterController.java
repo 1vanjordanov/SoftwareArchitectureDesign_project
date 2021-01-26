@@ -36,13 +36,17 @@ public class RegisterController {
                            @RequestParam String password,
                            @RequestParam String repeatedPassword,
                            @RequestParam String name,
-                           @RequestParam String surname) {
+                           @RequestParam String surname,
+                           Model model) {
         try {
             this.userService.register(username, password, repeatedPassword, name, surname);
             return "redirect:/login";
         }
         catch (PasswordsDoNotMatchException | UsernameExistsException | InvalidArgumentsException exception) {
-            return "redirect:/register?error=" + exception.getMessage();
+            model.addAttribute("hasError", true);
+            model.addAttribute("error", exception.getMessage());
+            model.addAttribute("bodyContent", "register");
+            return "master-template";
         }
     }
 }
