@@ -22,6 +22,7 @@ public class ParkingController {
 
     @GetMapping("/locate")
     public String getLocatePage(Model model) {
+
         model.addAttribute("bodyContent", "locate");
         return "master-template";
     }
@@ -32,38 +33,22 @@ public class ParkingController {
                                 @RequestParam(required = false) String sort,
                                 Model model) {
 
-        if  (city=="" && address==""){ // stavi go ova ->if (city.isEmpty() && address.isEmpty())
+        if (city.isEmpty() && address.isEmpty()) {
+
             model.addAttribute("hasError", true);
             model.addAttribute("error", "You must fill at least one field in order to search by city/address");
             model.addAttribute("currentLocation", "");
             model.addAttribute("bodyContent", "locate");
             return "master-template";
         }
-        List<Parking> result_parking = null;
 
-        if (!city.isEmpty() && !address.isEmpty()) {
-            if (sort.equals("name")) {
-                result_parking = parkingService.findAllByAddressAndCityOrderByName(address, city);
-            } else {
-                result_parking = parkingService.findAllByAddressAndCityOrderByRatingDesc(address, city);
-            }
-        } else if (!city.isEmpty()) {
-            if (sort.equals("name")) {
-                result_parking = parkingService.findAllByCityOrderByName(city);
-            } else {
-                result_parking = parkingService.findAllByCityOrderByRatingDesc(city);
-            }
-        } else if (!address.isEmpty()) {
-            if (sort.equals("name")) {
-                result_parking = parkingService.findAllByAddressOrderByName(address);
-            } else {
-                result_parking = parkingService.findAllByAddressOrderByRatingDesc(address);
-            }
-        }
-        if (result_parking.isEmpty()) {
+        List<Parking> resultParking;
+        resultParking = parkingService.findAllByCityOrAndAddressSorted(city, address, sort);
+
+        if (resultParking.isEmpty()) {
             return "notfoundparking";
         }
-        model.addAttribute("parking", result_parking);
+        model.addAttribute("parking", resultParking);
         model.addAttribute("currentLocation", "");
 
         model.addAttribute("bodyContent", "results");
@@ -72,18 +57,23 @@ public class ParkingController {
 
     @GetMapping("/currentlocation")
     public String getCurrentLocation(@RequestParam String latlong, Model model) {
-        if (latlong.equals("")) { //ne ja zemalo lokacijata
+
+        if (latlong.equals("")) {
+
             model.addAttribute("bodyContent", "locate");
-            return "master-template"; //javascript ke vrati Geolocation is not supported by this browser
+            return "master-template";
         }
+
         String[] coords = latlong.split(" ");
         double latitude = Double.parseDouble(coords[0]);
         double longitude = Double.parseDouble(coords[1]);
-        List<Parking> resultParking = null;
+        List<Parking> resultParking;
         resultParking = parkingService.findByCurrentAddress(latitude, longitude);
+
         if (resultParking.isEmpty()) {
             return "notfoundparking";
         }
+
         model.addAttribute("parking", resultParking);
         model.addAttribute("currentLocation", "Sorted by shortest distance");
         model.addAttribute("bodyContent", "results");
@@ -146,6 +136,7 @@ public class ParkingController {
         }
         return "redirect:/parking/allparkings";
     }
+
 
 }
 
