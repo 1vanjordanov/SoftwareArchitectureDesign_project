@@ -18,6 +18,8 @@ public class Parking {
     private Double latitude;
     private Double longitude;
     private String rating;
+    private String mapUrl;
+
 
     public Parking() {
 
@@ -32,5 +34,8 @@ public class Parking {
         this.rating = rating;
     }
 
+    public String getMapUrl() {
+        return mapUrl;
+    }
 
 }
