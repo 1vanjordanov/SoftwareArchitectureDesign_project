@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ParkingServiceImpl implements ParkingService {
+
     private final ParkingRepository parkingRepository;
 
     public ParkingServiceImpl(ParkingRepository parkingRepository) {
@@ -30,54 +31,19 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
-    public Optional<Parking> findByName(String name) {
-        return this.parkingRepository.findByName(name);
-    }
-
-    @Override
     public void deleteById(Long id) {
         this.parkingRepository.deleteById(id);
     }
 
-    @Override
-    public Optional<Parking> findByRating(double rating) {
-        return this.parkingRepository.findByRating(rating);
-    }
-
-    @Override
-    public Optional<Parking> findByRatingGreaterThanEqual(double rating) {
-        return this.parkingRepository.findByRatingGreaterThanEqual(rating);
-    }
-
-    @Override
-    public Optional<Parking> findByRatingLessThanEqual(double rating) {
-        return this.parkingRepository.findByRatingLessThanEqual(rating);
-    }
-
-    @Override
-    public Optional<Parking> findTop5ByRating(double rating) {
-        return this.parkingRepository.findTop5ByRating(rating);
-    }
-
-    @Override
-    public List<Parking> findByLocationAddress(String address) {
-        return parkingRepository.findAllByAddressIgnoreCase(address);
-    }
-
-    @Override
-    public List<Parking> findByLocationCity(String city) {
-        return parkingRepository.findAllByCityIgnoreCase(city);
-    }
-
-    @Override
-    public List<Parking> findByLocationAddressInCity(String address, String city) {
-        return parkingRepository.findAllByAddressAndCity(address, city);
-    }
+    //all parkings located less than 3 km from current location
     public List<Parking> findByCurrentAddress(Double currentlat, Double currentlng) {
-        return parkingRepository.findAll().stream().filter(parking -> haversineDistance(parking.getLatitude(), parking.getLongitude(), currentlat, currentlng)<3).
-                sorted(Comparator.comparing(parking -> haversineDistance(parking.getLatitude(), parking.getLongitude(), currentlat, currentlng)))
+        return parkingRepository.findAll().stream()
+                .filter(parking ->
+                        haversineDistance(parking.getLatitude(), parking.getLongitude(), currentlat, currentlng)<3)
+                .sorted(Comparator.comparing(parking ->
+                        haversineDistance(parking.getLatitude(), parking.getLongitude(), currentlat, currentlng)))
                 .collect(Collectors.toList());
-        //less then 3 km
+
     }
 
     private static double haversineDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
@@ -97,42 +63,40 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
-    public List<Parking> findAllByCityOrderByRatingDesc(String city) {
-        return parkingRepository.findAllByCityIgnoreCaseOrderByRatingDesc(city);
-    }
+    public List<Parking> findAllByCityOrAndAddressSorted(String city, String address, String sort) {
 
-    @Override
-    public List<Parking> findAllByAddressOrderByRatingDesc(String address) {
-        return parkingRepository.findAllByAddressIgnoreCaseOrderByRatingDesc(address);
-    }
+        List<Parking> resultParking = null;
 
-    @Override
-    public List<Parking> findAllByAddressAndCityOrderByRatingDesc(String address, String city) {
-        return parkingRepository.findAllByAddressIgnoreCaseAndCityIgnoreCaseOrderByRatingDesc(address,city);
-    }
+        if (!city.isEmpty() && !address.isEmpty()) {
 
-    @Override
-    public List<Parking> findAllByCityOrderByName(String city) {
-        return parkingRepository.findAllByCityIgnoreCaseOrderByName(city);
-    }
+            resultParking = sort.equals("name")
+                    ? parkingRepository.findAllByAddressIgnoreCaseContainsAndCityIgnoreCaseContainsOrderByName(address,city)
+                    : parkingRepository.findAllByAddressIgnoreCaseContainsAndCityIgnoreCaseContainsOrderByRatingDesc(address,city);
 
-    @Override
-    public List<Parking> findAllByAddressOrderByName(String address) {
-        return parkingRepository.findAllByAddressIgnoreCaseOrderByName(address);
-    }
+        } else if (!city.isEmpty()) {
 
-    @Override
-    public List<Parking> findAllByAddressAndCityOrderByName(String address, String city) {
-        return parkingRepository.findAllByAddressIgnoreCaseAndCityIgnoreCaseOrderByName(address,city);
+            resultParking = sort.equals("name")
+                    ? parkingRepository.findAllByCityIgnoreCaseContainsOrderByName(city)
+                    : parkingRepository.findAllByCityIgnoreCaseContainsOrderByRatingDesc(city);
+
+        } else if (!address.isEmpty()) {
+
+            resultParking = sort.equals("name")
+                    ? parkingRepository.findAllByAddressIgnoreCaseContainsOrderByName(address)
+                    : parkingRepository.findAllByAddressIgnoreCaseContainsOrderByRatingDesc(address);
+        }
+
+        return resultParking;
     }
 
     @Override
     public Optional<Parking> save(String name, String city, String address, Double latitude, Double longitude, String rating) {
+
         return Optional.of(this.parkingRepository.save(new Parking(name, city, address, latitude, longitude, rating)));
     }
-
     @Override
     public Optional<Parking> edit(Long id, String name, String city, String address, Double latitude, Double longitude, String rating) {
+
         Parking parking = this.parkingRepository.findById(id).orElseThrow(() -> new ParkingNotFoundException(id));
 
         parking.setName(name);
@@ -144,4 +108,5 @@ public class ParkingServiceImpl implements ParkingService {
 
         return Optional.of(this.parkingRepository.save(parking));
     }
+
 }
