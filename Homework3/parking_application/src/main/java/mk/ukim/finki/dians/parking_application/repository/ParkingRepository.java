@@ -10,32 +10,16 @@ import java.util.Optional;
 @Repository
 public interface ParkingRepository extends JpaRepository<Parking, Long> {
 
-    Optional<Parking> findByName(String name);
+    List<Parking> findAllByCityIgnoreCaseContainsOrderByName(String city);
 
-    Optional<Parking> findByRating(double rating);
+    List<Parking> findAllByCityIgnoreCaseContainsOrderByRatingDesc(String city);
 
-    Optional<Parking> findByRatingGreaterThanEqual(double rating);
+    List<Parking> findAllByAddressIgnoreCaseContainsOrderByName(String address);
 
-    Optional<Parking> findByRatingLessThanEqual(double rating);
+    List<Parking> findAllByAddressIgnoreCaseContainsOrderByRatingDesc(String address);
 
-    Optional<Parking> findTop5ByRating(double rating);
+    List<Parking> findAllByAddressIgnoreCaseContainsAndCityIgnoreCaseContainsOrderByName(String address, String city);
 
-    List<Parking> findAllByAddressIgnoreCase(String address);
-
-    List<Parking> findAllByCityIgnoreCase(String city);
-
-    List<Parking> findAllByAddressAndCity(String address, String city);
-
-    List<Parking> findAllByCityIgnoreCaseOrderByRatingDesc(String city);
-
-    List<Parking> findAllByAddressIgnoreCaseOrderByRatingDesc(String address);
-
-    List<Parking> findAllByAddressIgnoreCaseAndCityIgnoreCaseOrderByRatingDesc(String address, String city);
-
-    List<Parking> findAllByCityIgnoreCaseOrderByName(String city);
-
-    List<Parking> findAllByAddressIgnoreCaseOrderByName(String address);
-
-    List<Parking> findAllByAddressIgnoreCaseAndCityIgnoreCaseOrderByName(String address, String city);
+    List<Parking> findAllByAddressIgnoreCaseContainsAndCityIgnoreCaseContainsOrderByRatingDesc(String address, String city);
 
 }
