@@ -1,6 +1,7 @@
 package mk.ukim.finki.dians.parking_application.service.implementations;
 
 import mk.ukim.finki.dians.parking_application.model.Parking;
+import mk.ukim.finki.dians.parking_application.model.exceptions.ParkingNotFoundException;
 import mk.ukim.finki.dians.parking_application.repository.ParkingRepository;
 import mk.ukim.finki.dians.parking_application.service.ParkingService;
 import org.springframework.stereotype.Service;
@@ -123,5 +124,25 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public List<Parking> findAllByAddressAndCityOrderByName(String address, String city) {
         return parkingRepository.findAllByAddressIgnoreCaseAndCityIgnoreCaseOrderByName(address,city);
+    }
+
+    @Override
+    public Optional<Parking> save(String name, String city, String address, Double latitude, Double longitude, String rating) {
+        return Optional.of(this.parkingRepository.save(new Parking(name, city, address, latitude, longitude, rating)));
+    }
+
+    @Override
+    public Optional<Parking> edit(Long id, String name, String city, String address, Double latitude, Double longitude, String rating) {
+        Parking parking = this.parkingRepository.findById(id).orElseThrow(() -> new ParkingNotFoundException(id));
+
+        parking.setName(name);
+        parking.setCity(city);
+        parking.setAddress(address);
+        parking.setLatitude(latitude);
+        parking.setLongitude(longitude);
+        parking.setRating(rating);
+
+        return Optional.of(this.parkingRepository.save(parking));
+    }
     }
 }

@@ -42,4 +42,9 @@ public interface ParkingService {
 
     List<Parking> findAllByAddressAndCityOrderByName(String address, String city);
 
+    Optional<Parking> save(String name, String city, String address, Double latitude, Double longitude, String rating);
+
+    Optional<Parking> edit(Long id, String name, String city, String address, Double latitude, Double longitude, String rating);
+
+
 }
