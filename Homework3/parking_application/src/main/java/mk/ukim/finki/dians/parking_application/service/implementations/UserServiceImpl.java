@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Stream;
 
+/**
+ * Class which implements the UserService interface and
+ * must implement all the methods from the interface.
+ * Two dependency injections - UserRepository and PasswordEncoder
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -26,13 +31,25 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * This method has the logic used for user registration.
+     * It checks whether an attribute is wrong throws an Exception
+     * or creates an User object with a constructor with the same parameters
+     * @param username         username of the user is registering
+     * @param password         user's password
+     * @param repeatedPassword second input of the password
+     *                         for verification/confirmation
+     * @param name             user's first name
+     * @param surname          user's last name
+     * @return object as a result from the userRepository.save(user) method
+     */
     @Override
-    public User register(String username, String password, String repeatPassword, String name, String surname) {
+    public User register(String username, String password, String repeatedPassword, String name, String surname) {
 
-        if(Stream.of(username, password, repeatPassword, name,surname).anyMatch(str -> str == null || str.isEmpty())) {
+        if (Stream.of(username, password, repeatedPassword, name, surname).anyMatch(str -> str == null || str.isEmpty())) {
             throw new InvalidArgumentsException();
         }
-        if (!repeatPassword.equals(password)) {
+        if (!repeatedPassword.equals(password)) {
             throw new PasswordsDoNotMatchException();
         }
         if (this.userRepository.findByUsername(username).isPresent()) {
@@ -44,10 +61,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Method from the UserDetailsService interface
+     * Loads the user by the username given as a parameter
+     * @param username a string, user's username
+     * @return an exception or user with the username sent as a parameter
+     * @throws Exception if the username isn't found
+     */
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        return userRepository.findByUsername(s)
-                .orElseThrow(() -> new UsernameNotFoundException(s));
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }

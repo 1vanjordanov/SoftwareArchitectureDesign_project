@@ -4,6 +4,11 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+/**
+ * Class for the Parking Entity
+ * Contains all of the entity fields and their
+ * declaration, the class constructor and/or setters/getters.
+ */
 @Data
 @Entity
 @Table(name = "parkings")

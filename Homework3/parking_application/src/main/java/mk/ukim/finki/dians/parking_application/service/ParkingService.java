@@ -5,6 +5,10 @@ import mk.ukim.finki.dians.parking_application.model.Parking;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Interface which contains abstract and public methods
+ * about the Parking class.
+ */
 public interface ParkingService {
 
     List<Parking> findAll();

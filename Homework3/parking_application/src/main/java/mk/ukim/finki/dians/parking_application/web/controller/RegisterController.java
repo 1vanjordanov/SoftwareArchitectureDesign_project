@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
+/**
+ * MVC Controller which provides user registration.
+ * Dependency injection of the UserService.
+ * The controller is mapped to the "/register" path.
+ */
 @Controller
 @RequestMapping("/register")
 public class RegisterController {
@@ -23,7 +27,15 @@ public class RegisterController {
         this.userService = userService;
     }
 
-
+    /**
+     * A method which is a response to a GET request
+     *              (request for the registration page)
+     * @param error not required parameter which lets a know
+     *              whether a error has occured
+     * @param model object from the Model class which makes
+     *              parameters accessible to the view page
+     * @return html view of the registration page
+     */
     @GetMapping
     public String getRegisterPage(@RequestParam(required = false) String error, Model model) {
 
@@ -32,11 +44,24 @@ public class RegisterController {
             model.addAttribute("hasError", true);
             model.addAttribute("error", error);
         }
+
         model.addAttribute("bodyContent", "register");
         return "master-template";
-
     }
 
+    /**
+     * POST request on the register page
+     * @param username username of the user is registering
+     * @param password user's password
+     * @param repeatedPassword second input of the password
+     *                         for verification/confirmation
+     * @param name user's first name
+     * @param surname user's last name
+     * @param model object from the Model class which makes
+     *              parameters accessible to the view page
+     * @return redirect to the login page if the registration is
+     *         successful or the registration page if it's not
+     */
     @PostMapping
     public String register(@RequestParam String username,
                            @RequestParam String password,

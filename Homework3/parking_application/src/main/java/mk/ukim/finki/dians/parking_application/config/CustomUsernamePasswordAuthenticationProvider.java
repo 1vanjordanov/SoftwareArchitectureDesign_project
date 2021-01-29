@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Authentication Provider
+ */
 @Component
 public class CustomUsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 
@@ -22,8 +25,19 @@ public class CustomUsernamePasswordAuthenticationProvider implements Authenticat
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * This method provides authentication by requiring
+     * the user to enter a username and a password
+     * @param authentication - object from the Authentication class
+     * @return authentication implementation designed for simple
+     * presentation od username and password,
+     * passed arguments are userDetails, user's password and
+     * the credentials needed for authorization
+     * @throws AuthenticationException
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
 
@@ -36,6 +50,7 @@ public class CustomUsernamePasswordAuthenticationProvider implements Authenticat
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("Password is incorrect!");
         }
+
         return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
 
     }

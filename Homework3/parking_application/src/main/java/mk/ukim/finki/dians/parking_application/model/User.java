@@ -9,6 +9,13 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Class for the User Entity
+ * Contains all of the entity fields and their
+ * declaration, the class constructor and/or setters/getters.
+ * The class implements UserDetails
+ * which provides user information.
+ */
 @Data
 @Entity
 @Table(name = "parking_users")

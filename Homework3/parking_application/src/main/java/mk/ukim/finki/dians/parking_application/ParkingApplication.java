@@ -15,10 +15,12 @@ public class ParkingApplication {
     public static void main(String[] args) {
         SpringApplication.run(ParkingApplication.class, args);
     }
+
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
     }
+
     @Configuration
     public class WebConfig implements WebMvcConfigurer {
         @Override

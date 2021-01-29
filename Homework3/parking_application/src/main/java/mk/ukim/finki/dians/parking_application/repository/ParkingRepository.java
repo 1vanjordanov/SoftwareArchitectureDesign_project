@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * JPA repository of the Parking Entity.
+ * Provides methods for manipulation with the Parking class
+ * without their implementation.
+ */
 @Repository
 public interface ParkingRepository extends JpaRepository<Parking, Long> {
 
