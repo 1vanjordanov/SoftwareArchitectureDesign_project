@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    var x = document.getElementById("latlong");
+    var x = document.getElementById("coordinates");
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
     } else {
@@ -8,7 +8,7 @@
     }
 
     function showPosition(position) {
-        var x = document.getElementById("latlong");
+        var x = document.getElementById("coordinates");
         x.value = position.coords.latitude + " " + position.coords.longitude;
     }
 </script>
@@ -71,7 +71,7 @@
 
         <div class="col-5 ">
             <div class="row justify-content-center mt-5">
-                <form action="/parking/allparkings" class="form login" method="GET">
+                <form action="/parking/all-parkings" class="form login" method="GET">
                     <div class="row justify-content-center w-50 mx-auto">
                         <button class="btn btn-lg bg-teal border border-white" type="submit">All parkings
                         </button>
@@ -80,15 +80,15 @@
             </div>
 
             <div class="row mt-5">
-                <form action="/parking/currentlocation" class="form login" method="GET">
+                <form action="/parking/current-location" class="form login" method="GET">
                     <div class="row justify-content-center w-50 mx-auto">
                         <button class="btn btn-lg bg-teal border border-white" type="submit">Search by current
                             location
                         </button>
                         <input type="text"
                                class="form-control"
-                               id="latlong"
-                               name="latlong"
+                               id="coordinates"
+                               name="coordinates"
                                hidden="true">
                     </div>
 

@@ -27,7 +27,7 @@ public class ParkingServiceImpl implements ParkingService {
 
     /**
      * A method that has the logic to find all the parkings
-     * using the UserRepository's method findAll()
+     * using the ParkingRepository's method findAll()
      * @return a List object which contains all the parkings
      */
     @Override
@@ -36,7 +36,7 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     /**
-     * A method which is using the UserRepository's
+     * A method which is using the ParkingRepository's
      * method findById and has one argument
      * @param id the id of the parking we want to find
      * @return object of the Optional class which is or is not a parking
