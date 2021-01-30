@@ -117,6 +117,9 @@ public class ParkingServiceImpl implements ParkingService {
     public List<Parking> findAllByCityOrAndAddressSorted(String city, String address, String sort) {
 
         List<Parking> parkingResults = null;
+        if(sort==null){
+            sort="name";
+        }
 
         if (!city.isEmpty() && !address.isEmpty()) {
 
