@@ -1,7 +1,8 @@
 <div class="container" xmlns:th="http://www.thymeleaf.org">
+    <br>
     <div class="row">
-        <div class="col-md-5">
-            <form action="/parking/add" method="POST">
+        <div class="jumbotron col-md-5">
+            <form action="/parking/add" method="POST" style="color:grey">
                 <input id="id" type="hidden" name="id" th:value="(${parking} != null ? ${parking.getId()} : '')">
                 <div class="form-group">
                     <label for="name">Parking name</label>
@@ -13,6 +14,7 @@
                            required
                            placeholder="Enter parking name">
                 </div>
+
                 <div class="form-group">
                     <label for="city">Parking city</label>
                     <input type="text"
@@ -65,9 +67,13 @@
                 </div>
                 <br>
 
-                <button id="submit" type="submit" class="btn btn-block bg-teal">Submit</button>
-                <div class="back">
-                    <a type="button" class="bg-teal text-light btn" href="javascript:history.back()">Back</a>
+                <div class="row">
+                    <div class="col-md-5">
+                    <button id="submit" type="submit" class="btn btn-lg bg-teal">Submit</button>
+                    </div>
+                    <div class="col-md-5">
+                    <a type="button" class="bg-teal text-light btn btn-lg" href="javascript:history.back()">Back</a>
+                    </div>
                 </div>
             </form>
         </div>
