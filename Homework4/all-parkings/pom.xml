@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>mk.ukim.finki.dians</groupId>
-    <artifactId>all-parkings</artifactId>
+    <artifactId>parking-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>parking-service</name>
     <description>Demo project for Spring Boot</description>
@@ -74,6 +74,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>parking-service</finalName>
     </build>
     <repositories>
         <repository>

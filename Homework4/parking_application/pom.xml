@@ -101,6 +101,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>parking_application</finalName>
 
     </build>
     <repositories>
