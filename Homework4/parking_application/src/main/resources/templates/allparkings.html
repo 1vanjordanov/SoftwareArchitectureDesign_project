@@ -1,0 +1,67 @@
+<div class="container mt-5" xmlns:th="http://www.thymeleaf.org">
+    <!--        <iframe src="https://www.google.com/maps/d/embed?mid=1dkMVtJGUUDw-bZYRQyqm-4OP6SCaiAfr&usp=sharing"  height="600" width="800" title="All parkings on map"></iframe>-->
+
+    <div class="back">
+        <a type="button" class="bg-teal text-light btn" href="javascript:history.back()">Back</a>
+    </div>
+
+    <br/>
+    <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1dkMVtJGUUDw-bZYRQyqm-4OP6SCaiAfr" width="1000"
+            height="480"></iframe>
+    <br>
+
+
+    <br>
+    <div class="row text-light">
+        <h4>All parkings</h4>
+    </div>
+    <div class="col mb-3">
+        <div class="row">
+            <div class="col-sm-12 col-md-12" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a href="/parking/add-form" class="btn btn-block bg-teal">
+                    Add new parking
+                </a>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="result: ${parking}">
+            <div class="card bg-grey">
+                <!--            <img src="..." class="card-img-top" alt="...">-->
+                <iframe th:src="${result?.getMapUrl()}"
+                        class="card-img-top" width="640" height="480"></iframe>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <th:block th:text="${result.getName()}"/>
+                    </h5>
+                    <p class="card-text">
+                        <th:block th:text="${result.getAddress()}"/>
+                    </p>
+                    <p class="card-text">
+                        <th:block th:text="${result.getCity()}"/>
+                    </p>
+                    <p class="card-text">
+                        <th:block th:text="${result.getRating()}"/>
+                    </p>
+                    <p>
+                        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a th:href="@{'/parking/edit-form/{id}' (id=${result.getId()})}"
+                               class="btn btn-block bg-teal">
+                                <i class="fa fa-trash">Edit</i>
+                            </a>
+                        </th:block>
+                    </p>
+                    <p>
+                        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a th:href="@{'/parking/delete/{id}' (id=${result.getId()})}"
+                               class="btn btn-sm btn-light">
+                                <i class="fa fa-trash">Delete</i>
+                            </a>
+                        </th:block>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

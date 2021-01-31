@@ -1,0 +1,33 @@
+
+<div class="container mt-5" xmlns:th="http://www.thymeleaf.org">
+    <div class="back">
+        <a type="button" class="bg-teal text-light btn" href="javascript:history.back()">Back</a>
+    </div>
+    <div class="row text-light">
+        <h2>All results</h2>
+        <h4 th:if="${!currentLocation.isEmpty()}" th:text="${currentLocation}"></h4>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="result: ${parking}">
+            <div class="card bg-grey">
+                <!--            <img src="..." class="card-img-top" alt="...">-->
+                <iframe th:src="${result?.getMapUrl()}"
+                        class="card-img-top" width="640" height="480"></iframe>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <th:block th:text="${result.getName()}"/>
+                    </h5>
+                    <p class="card-text">
+                        <th:block th:text="${result.getAddress()}"/>
+                    </p>
+                    <p class="card-text">
+                        <th:block th:text="${result.getCity()}"/>
+                    </p>
+                    <p class="card-text">
+                        <th:block th:text="${result.getRating()}"/>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

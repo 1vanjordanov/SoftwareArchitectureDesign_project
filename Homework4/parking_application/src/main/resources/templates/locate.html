@@ -1,0 +1,99 @@
+<script type="text/javascript">
+    var x = document.getElementById("coordinates");
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        x.hidden = false;
+        x.innerText = "Geolocation is not supported by this browser.";
+    }
+
+    function showPosition(position) {
+        var x = document.getElementById("coordinates");
+        x.value = position.coords.latitude + " " + position.coords.longitude;
+    }
+</script>
+
+<div class="container mt 5" xmlns:th="http://www.thymeleaf.org">
+    <div class="row justify-content-center">
+        <div class="col-5">
+            <form action="/parking/result" method="POST" class="form login">
+
+                <div class="row">
+                    <div class="form-floating col-xs-6 text-left text-light">Search by City <br></div>
+                </div>
+                <div class="row">
+                    <div class="form-floating col-xs-6 text-left">
+                        <input type="text" class="form-control text-dark" id="cityName" name="city"
+                               placeholder="Enter city name">
+                        <label for="cityName">Enter city name</label>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="form-floating col-xs-6 text-left text-light">Search by address <br></div>
+                </div>
+                <div class="row">
+                    <div class="form-floating col-xs-6 text-left">
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
+                        <label for="address">Enter address</label>
+                    </div>
+                </div>
+                <br>
+                <div class="row justify-content-around">
+                    <div class="col-5">
+                        <div>
+                            <input type="radio" class="btn-check" name="sort" id="name" autocomplete="off"
+                                   value="name" checked>
+                            <label class="btn bg-teal" for="name">Sort by Name</label>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div>
+                            <input type="radio" class="btn-check" name="sort" id="rating" autocomplete="off"
+                                   value="rating">
+                            <label class="btn bg-teal" for="rating">Sort By Rating</label>
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+                <div class=" row col-xs-6">
+                    <div th:if="${hasError}" class="border border-danger text-center m-2">
+                        <h4 class="text-danger" th:text="${error}"></h4>
+                    </div>
+                    <br>
+                    <div class="form-floating d-grid col-6 mx-auto">
+                        <button class="btn bg-teal">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-5 ">
+            <div class="row justify-content-center mt-5">
+                <form action="/parking/allparkings" class="form login" method="GET">
+                    <div class="row justify-content-center w-50 mx-auto">
+                        <button class="btn btn-lg bg-teal border border-white" type="submit">All parkings
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row mt-5">
+                <form action="/parking/currentlocation" class="form login" method="GET">
+                    <div class="row justify-content-center w-50 mx-auto">
+                        <button class="btn btn-lg bg-teal border border-white" type="submit">Search by current
+                            location
+                        </button>
+                        <input type="text"
+                               class="form-control"
+                               id="coordinates"
+                               name="coordinates"
+                               hidden="true">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
